@@ -146,7 +146,7 @@ void check_url(char** url, size_t* file_size, short* status) {
 				(*url) = temp;
 
 				if (stat((*url), &file_stat)) {
-					(*status) = S_404;
+					(*status) = S_403;
 				}
 			}
 			(*file_size) = (size_t) file_stat.st_size;
@@ -242,6 +242,9 @@ void read_cb(EV_P_ ev_io* w, int revents) {
 		if (check_request_end(ab)) {
 			response(EV_A_ w, ab);
 		}
+	}
+	else {
+		close_connection(EV_A_ w);
 	}
 }
 
