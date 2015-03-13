@@ -5,7 +5,7 @@
 #define MT_PLAIN "text/plain"
 #define MT_CSS "text/css"
 #define MT_GIF "image/gif"
-#define MT_PNG "image/x-png"
+#define MT_PNG "image/png"
 #define MT_JPG "image/jpeg"
 #define MT_TIFF "image/tiff"
 #define MT_BMP "image/bmp"

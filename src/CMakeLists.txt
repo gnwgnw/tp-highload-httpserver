@@ -1,0 +1,5 @@
+include_directories(../include)
+set(CMAKE_C_FLAGS "-std=gnu99")
+set(SOURCE_FILES main.c server.c utils.c async_buffer.c)
+add_executable(httpd ${SOURCE_FILES})
+target_link_libraries(httpd ev)

@@ -79,9 +79,9 @@ void set_header(char* response_header, short status, char* url, size_t file_size
 	if (status == S_200) {
 		char temp[20] = "";
 		sprintf(temp, "%li", file_size);
-		set_header_line(response_header, "Content-Length", temp);
+		set_header_line(response_header, "Content-Length:", temp);
 
-		set_header_line(response_header, "Content-Type", get_content_type(get_filename_ext(url)));
+		set_header_line(response_header, "Content-Type:", get_content_type(get_filename_ext(url)));
 	}
 
 	strcat(response_header, HTTP_CRLF);
@@ -129,6 +129,14 @@ void check_url(char** url, size_t* file_size, short* status) {
 		struct stat file_stat;
 
 		urldecode(*url, *url);
+		char* temp = *url;
+		while (*temp) {
+			if (*temp == '?'){
+				*temp = '\0';
+				break;
+			}
+			++temp;
+		}
 		(*url) = get_abs_file_path(root_path, *url);
 
 		if (!stat((*url), &file_stat)) {
