@@ -8,7 +8,7 @@
 #include "utils.h"
 #include "server.h"
 
-#define DEFAULT_ROOT "/home/gexogen"
+#define DEFAULT_ROOT "/home"
 
 char root_path[FILENAME_MAX] = DEFAULT_ROOT;
 uint8_t chunk_size = 8;
