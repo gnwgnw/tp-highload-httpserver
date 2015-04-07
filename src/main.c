@@ -15,7 +15,7 @@ int main(int argc, char** argv) {
 	arg_parser(argc, argv, &addon_worker, &port, &backlog_size);
 
 	int sock;
-	create_socket(&sock, 0, 0);
+	create_socket(&sock, port, backlog_size);
 
 	start_message(addon_worker, port, backlog_size, sock);
 
@@ -23,9 +23,9 @@ int main(int argc, char** argv) {
 
 	struct ev_loop* loop = EV_DEFAULT;
 	struct ev_io w_accept;
+	struct ev_signal w_exit;
 
 	if (pid) {
-		struct ev_signal w_exit;
 		ev_signal_init(&w_exit, exit_cb, SIGINT);   //only in main process
 		ev_signal_start(EV_A_ &w_exit);
 	}
