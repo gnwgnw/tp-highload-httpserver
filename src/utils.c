@@ -1,6 +1,6 @@
 #include "utils.h"
 
-pid_t multi_fork(const int count) {
+pid_t create_workers(const int count) {
 	pid_t pid = 1;
 	for (int i = 0; i < count; ++i) {
 		pid = fork();
@@ -65,5 +65,72 @@ void urldecode(char* dst, const char* src) {
 			*dst++ = *src++;
 		}
 	}
-	*dst++ = '\0';
+	*dst = '\0';
+}
+
+void start_message(uint8_t addon_worker, uint16_t port, uint8_t backlog_size, int sock) {
+	printf("Start server\n"
+		"Port: %d\n"
+		"Socket: %d\n"
+		"Dir root: %s\n"
+		"Chunck size: %d\n"
+		"Addon workers: %d\n"
+		"Backlog size: %d\n",
+		port, sock, root_path, chunk_size, addon_worker, backlog_size);
+}
+
+void arg_parser(int argc, char** argv, uint8_t* addon_worker, uint16_t* port, uint8_t* backlog_size) {
+	int c;
+	while ((c = getopt(argc, argv, "C:r:c:p:b:")) != -1)
+		switch (c) {
+			case 'C':
+				chunk_size = (uint8_t) atoi(optarg);
+		        break;
+			case 'r':
+				strcpy(root_path, optarg);
+		        break;
+			case 'c':
+				(*addon_worker) = (uint8_t) (atoi(optarg) - 1);
+		        break;
+			case 'p':
+				(*port) = (uint16_t) atoi(optarg);
+		        break;
+			case 'b':
+				(*backlog_size) = (uint8_t) atoi(optarg);
+		        break;
+			default:
+				exit(1);
+		}
+}
+
+void get_url_path(char** url) {
+	char* temp = *url;
+	while (*temp) {
+			if (*temp == '?'){
+				*temp = '\0';
+				break;
+			}
+			++temp;
+		}
+}
+
+void create_socket(int* sock, uint16_t port, uint16_t backlog_size) {
+	int status;
+	struct sockaddr_in sockaddr;
+
+	*sock = socket(AF_INET, SOCK_STREAM, 0);
+	check_status(*sock, "Socket");
+
+	bzero(&sockaddr, sizeof(sockaddr));
+	sockaddr.sin_family = AF_INET;
+	sockaddr.sin_port = htons(port);
+	sockaddr.sin_addr.s_addr = htons(INADDR_ANY);
+
+	status = bind(*sock, (struct sockaddr const*) &sockaddr, (socklen_t) sizeof(sockaddr));
+	check_status(status, "Bind");
+
+	status = listen(*sock, backlog_size);
+	check_status(status, "Listen");
+
+	return;
 }

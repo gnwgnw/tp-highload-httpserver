@@ -129,14 +129,7 @@ void check_url(char** url, size_t* file_size, short* status) {
 		struct stat file_stat;
 
 		urldecode(*url, *url);
-		char* temp = *url;
-		while (*temp) {
-			if (*temp == '?'){
-				*temp = '\0';
-				break;
-			}
-			++temp;
-		}
+		get_url_path(url);
 		(*url) = get_abs_file_path(root_path, *url);
 
 		if (!stat((*url), &file_stat)) {
