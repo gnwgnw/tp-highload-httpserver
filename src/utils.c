@@ -68,18 +68,18 @@ void urldecode(char* dst, const char* src) {
 	*dst = '\0';
 }
 
-void start_message(uint8_t addon_worker, uint16_t port, uint8_t backlog_size, int sock) {
+void start_message(uint8_t addon_worker, uint16_t port, uint16_t backlog_size, int sock) {
 	printf("Start server\n"
-		"Port: %d\n"
-		"Socket: %d\n"
-		"Dir root: %s\n"
-		"Chunck size: %d\n"
-		"Addon workers: %d\n"
-		"Backlog size: %d\n",
-		port, sock, root_path, chunk_size, addon_worker, backlog_size);
+		       "Port: %d\n"
+		       "Socket: %d\n"
+		       "Dir root: %s\n"
+		       "Chunck size: %d\n"
+		       "Addon workers: %d\n"
+		       "Backlog size: %d\n",
+	       port, sock, root_path, chunk_size, addon_worker, backlog_size);
 }
 
-void arg_parser(int argc, char** argv, uint8_t* addon_worker, uint16_t* port, uint8_t* backlog_size) {
+void arg_parser(int argc, char** argv, uint8_t* addon_worker, uint16_t* port, uint16_t * backlog_size) {
 	int c;
 	while ((c = getopt(argc, argv, "C:r:c:p:b:")) != -1)
 		switch (c) {
@@ -106,12 +106,12 @@ void arg_parser(int argc, char** argv, uint8_t* addon_worker, uint16_t* port, ui
 void get_url_path(char** url) {
 	char* temp = *url;
 	while (*temp) {
-			if (*temp == '?'){
-				*temp = '\0';
-				break;
-			}
-			++temp;
+		if (*temp == '?') {
+			*temp = '\0';
+			break;
 		}
+		++temp;
+	}
 }
 
 void create_socket(int* sock, uint16_t port, uint16_t backlog_size) {

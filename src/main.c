@@ -9,7 +9,7 @@ char root_path[FILENAME_MAX] = DEFAULT_ROOT;
 uint8_t chunk_size = 8;
 uint8_t addon_worker = 3;
 uint16_t port = 8080;
-uint8_t backlog_size = 128;
+uint16_t backlog_size = 128;
 
 int main(int argc, char** argv) {
 	arg_parser(argc, argv, &addon_worker, &port, &backlog_size);
@@ -40,4 +40,3 @@ int main(int argc, char** argv) {
 
 	return 0;
 }
-

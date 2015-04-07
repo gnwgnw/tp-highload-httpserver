@@ -20,8 +20,8 @@ char* get_date_str();
 void set_header_line(char* const response, char* const val, char* const key);
 const char* get_filename_ext(const char* filename);
 void urldecode(char* dst, const char* src);
-void start_message(uint8_t addon_worker, uint16_t port, uint8_t backlog_size, int sock);
-void arg_parser(int argc, char** argv, uint8_t* addon_worker, uint16_t* port, uint8_t* backlog_size);
+void start_message(uint8_t addon_worker, uint16_t port, uint16_t backlog_size, int sock);
+void arg_parser(int argc, char** argv, uint8_t* addon_worker, uint16_t* port, uint16_t * backlog_size);
 void get_url_path(char** url);
 void create_socket(int* sock, uint16_t port, uint16_t backlog_size);
 
