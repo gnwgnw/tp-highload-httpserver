@@ -14,8 +14,7 @@ uint16_t backlog_size = 128;
 int main(int argc, char** argv) {
 	arg_parser(argc, argv, &addon_worker, &port, &backlog_size);
 
-	int sock;
-	create_socket(&sock, port, backlog_size);
+	int sock = create_socket(port, backlog_size);
 
 	start_message(addon_worker, port, backlog_size, sock);
 

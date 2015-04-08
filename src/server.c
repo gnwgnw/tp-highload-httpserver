@@ -129,7 +129,7 @@ void check_url(char** url, size_t* file_size, short* status) {
 		struct stat file_stat;
 
 		urldecode(*url, *url);
-		get_url_path(url);
+		change_url_to_urlpath(*url);
 		(*url) = get_abs_file_path(root_path, *url);
 
 		if (!stat((*url), &file_stat)) {
@@ -178,6 +178,8 @@ void check_request(char* request, char** method, char** url, short* only_head, s
 }
 
 void close_connection(EV_P_ ev_io* w) {
+	debug("Close socket %d", w->fd);
+
 	ev_io_stop(loop, w);
 
 	close(w->fd);
@@ -185,8 +187,6 @@ void close_connection(EV_P_ ev_io* w) {
 	ab_free(w->data);
 	free(w->data);
 	free(w);
-
-	return;
 }
 
 char* check_request_end(struct async_buffer* ab) {
@@ -219,11 +219,14 @@ void accept_cb(EV_P_ ev_io* w, int revents) {
 
 	ev_io_init(w_client_read, read_cb, client_sock, EV_READ);
 	ev_io_start(EV_A_ w_client_read);
+
+	debug("Start client on socket %d", client_sock);
 }
 
 void read_cb(EV_P_ ev_io* w, int revents) {
 	if (revents & EV_ERROR)
 		return;
+	debug("Read from socket %d", w->fd);
 
 	struct async_buffer* ab = (struct async_buffer*) w->data;
 	char chunk[chunk_size];
@@ -244,6 +247,7 @@ void read_cb(EV_P_ ev_io* w, int revents) {
 void write_cb(EV_P_ ev_io* w, int revents) {
 	if (revents & EV_ERROR)
 		return;
+	debug("Write to socket %d", w->fd);
 
 	struct async_buffer* ab = (struct async_buffer*) w->data;
 	size_t byte_to_send = ab->cur_write_pos - ab->cur_read_pos;
@@ -260,5 +264,5 @@ void write_cb(EV_P_ ev_io* w, int revents) {
 
 void exit_cb(EV_P_ ev_signal* w, int revents) {
 	ev_break(EV_A_ EVBREAK_ALL);
-	printf("Stop signal recived\n");
+	logging("Stop-signal recived");
 }
