@@ -8,6 +8,8 @@ void check_status(int s, const char* message) {
 }
 
 pid_t create_workers(int count) {
+	debug("create workers");
+
 	pid_t pid = 1;
 	logging("Start worker 1");
 	for (int i = 0; i < count; ++i) {
@@ -33,6 +35,7 @@ void start_message(uint8_t addon_worker, uint16_t port, uint16_t backlog_size, i
 
 void arg_parser(int argc, char** argv, uint8_t* addon_worker, uint16_t* port, uint16_t* backlog_size) {
 	debug("arg parser");
+
 	int c = 0;
 	while ((c = getopt(argc, argv, "C:r:c:p:b:")) != -1)
 		switch (c) {
@@ -57,6 +60,8 @@ void arg_parser(int argc, char** argv, uint8_t* addon_worker, uint16_t* port, ui
 }
 
 int create_socket(uint16_t port, uint16_t backlog_size) {
+	debug("create socket");
+
 	int status;
 	int sock = 0;
 	struct sockaddr_in sockaddr;
